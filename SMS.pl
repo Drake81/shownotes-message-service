@@ -46,9 +46,15 @@ $dbh->do("CREATE TABLE IF NOT EXISTS subscribers(
                 servicehost TEXT NOT NULL,
                 token TEXT DEFAULT 0,
                 challenge TEXT DEFAULT 0,
-                info INT NOT NULL DEFAULT 0,
                 UNIQUE (jid,servicehost)
         )");
+
+# create pad info table if not exists
+$dbh->do("CREATE TABLE IF NOT EXISTS padinfo(
+                jid TEXT NOT NULL PRIMARY KEY,
+                info INT NOT NULL DEFAULT 0
+        )");
+
 
 # make a jabber client object
 my $con = new Net::XMPP::Client();
@@ -96,11 +102,14 @@ sub message {
     elsif($body eq 'reglist') {
         reglist();
     }
-    elsif($body =~ /^reg ([\w|\d|-]+)/i) {
+    elsif($body =~ /^reg ([\w|\d|-]+)$/i) {
         register($1);
     }
-    elsif($body =~ /^unreg ([\*|\w|\d|-]+)/i) {
+    elsif($body =~ /^unreg ([\*|\w|\d|-]+)$/i) {
         unregister($1);
+    }
+    elsif($body =~ /^notify (on|off)$/i) {
+        showpadinfo($1);
     }
     elsif($body eq 'about'){
         about();
@@ -120,19 +129,50 @@ sub message {
     return
 }
 
+#showpad info
+sub showpadinfo {
+   
+    my $servicehost = $cfg->param('server');
+    
+    $dbh->do("INSERT OR IGNORE INTO subscribers
+                VALUES('$account','$servicehost',0,0)
+             ");
+     
+    $dbh->do("INSERT OR IGNORE INTO padinfo
+                VALUES('$account',0)
+            ");
+
+    my $infoverbal = shift;
+    my $info = 0;
+
+    if($infoverbal eq "on"){
+        $info = 1;
+    }
+
+    my $sth = $dbh->do("UPDATE padinfo SET info=$info
+                            WHERE jid LIKE '$account'
+                      ");
+    if($info == 1){
+        $msg = "Showpad notification activated";
+    }
+    else{
+        $msg = "Showpad notification deactivated";
+    }
+}
+
 # about
 sub about {
-    $msg = "Shownotes Message Service\n=========================\n\nAuthor: Martin Stoffers\nEmail:  Dr4k3\@shownot.es\nSource: https://github.com/shownotes/shownotes-message-service\n\nContributers: SimonWaldherr\n\nThis program is published under the terms of GPLv2 and comes with no warranty.\nhttp://www.gnu.org/licenses/gpl-2.0.txt";
+    $msg = "Shownotes Message Service\n=========================\n\nSource: https://github.com/shownotes/shownotes-message-service\n\nAuthor: Martin Stoffers\nEmail: Dr4k3\@shownot.es\nJabber: Dr4k3\@fastreboot.de\n\nContributers:\n\n Simon Waldherr\n Email:  SimonWaldherr\@shownot.es\n Jabber: SimonWaldherr\@jabber.shownot.es\n\n\nThis program is published under the terms of GPLv2 and comes with no warranty.\nhttp://www.gnu.org/licenses/gpl-2.0.txt";
 }
 
 # help
 sub printhelp {
-    $msg = "list - Get a list of podcasts\nreg <podcast> - Subscribe to a podcast notification\nreglist - Get a list of all your subscribtions\nunreg <podcast | *> - Unsubscribe a podcast notification\nabout - About the bot";
+    $msg = "list - Get a list of podcasts\n\nreg < podcast > - Subscribe to a podcast notification\n\nreglist - Get a list of all your subscribtions\n\nunreg < podcast | * > - Unsubscribe a podcast notification\n\nnotify < ON | OFF > - Get notifications about new showpads on http://pad.shownot.es\n\nabout - About the bot";
 }
 
 # list all podcasts
 sub podlist {
-    
+
     my $sth = $dbh->prepare("SELECT slug FROM podcasts
                                 ORDER BY slug ASC
                            ");
@@ -200,13 +240,17 @@ sub register {
         $sth->finish();
 
         $dbh->do("INSERT OR IGNORE INTO subscribers
-                    VALUES('$account','$servicehost',0,0,0)
+                    VALUES('$account','$servicehost',0,0)
+                ");
+
+        $dbh->do("INSERT OR IGNORE INTO padinfo
+                    VALUES('$account',0)
                 ");
 
         my $timestamp = time;
         $dbh->do("INSERT INTO subscriptions 
                     SELECT '$account','$podslug',$timestamp 
-                    WHERE NOT EXISTS (
+                    WHERE NOT EXISTS
                         ( SELECT jid,slug FROM subscriptions
                             WHERE jid LIKE '$account'
                             AND slug LIKE '$podslug'
