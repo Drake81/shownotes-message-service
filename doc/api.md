@@ -12,6 +12,45 @@
 
 This documentation
 
+### Get all slugs
+
+#### Returns
+
+* URI: http://example.org/rest/slug
+* Methode: GET
+* Auth: BASIC
+
+HTTP Status: 200 OK
+
+Content-Type: application/JSON
+
+Data:
+
+```JSON
+{
+    "slugs":{
+        "wrint":{
+            "subscriptions":1337,
+            "title":"Wrint"
+        },
+        "cre":{
+            "subscriptions":23,
+            "title":"CRE"
+        }
+        ...
+    }
+}
+```
+
+or, if there is no entry
+
+HTTP Status: 204 No Content
+
+Content-Type: text/html
+
+Data: -
+
+
 ### Get all subscribers with full information
 
 * URI: http://example.org/rest/subscriber
@@ -29,11 +68,9 @@ Data:
 ```JSON
 {
     "anon@example.org":{
-        "pad":"",
         "info":1
     },
     "anon2@example.org":{
-        "pad":"anon",
         "info":0
     }
 }
@@ -65,7 +102,6 @@ Data:
 ```JSON
 {
     "anon@example.org":{
-        "pad":"",
         "info":1
     }
 }
@@ -222,49 +258,66 @@ Content-Type: text/html
 
 Data: -
 
-# TODO
+## PUT Resources
 
-### PUT register - challenge
+### Register a new user to the service by putting a jid and a challenge
 
-### PUT token
-
-### Get all slugs
-
-#### Returns
-
-* URI: http://example.org/rest/slug
-* Methode: GET
+* URI: http://example.org/rest/register
+* Methode: PUT
 * Auth: BASIC
-
-HTTP Status: 200 OK
-
-Content-Type: application/JSON
+* Content-Type: application/json
 
 Data:
 
 ```JSON
 {
-    "slugs":{
-        "wrint":{
-            "subscriptions":1337,
-            "title":"Wrint"
-        },
-        "cre":{
-            "subscriptions":23,
-            "title":"CRE"
-        }
-        ...
-    }
+    "jid":"anon@example.org",
+    "challenge":"12345example"
 }
 ```
 
-or, if there is no entry
+### Returns
 
-HTTP Status: 204 No Content
+HTTP Status: 200 OK
 
 Content-Type: text/html
 
-Data: -
+or, if user is registered to service 
+
+HTTP Status: 409 Conflict
+
+Content-Type: text/html 
+
+
+### Verfiy token to complete the registration
+
+* URI: http://example.org/rest/token
+* Methode: PUT
+* Auth: BASIC
+* Content-Type: application/json
+
+Data:
+
+```JSON
+{
+    "jid":"anon@example.org",
+    "token":"user_entered_token",
+    "challenge":"12345example"
+}
+```
+
+### Returns
+
+HTTP Status: 200 OK
+
+Content-Type: text/html
+
+or, if token is wrong
+
+HTTP Status: 409 Conflict
+
+Content-Type: text/html 
+
 
 ## POST Resources
 
@@ -318,3 +371,11 @@ Data:
     ]
 }
 ```
+or, if user is not registered 
+
+HTTP Status: 409 Conflict
+
+Content-Type: text/html
+
+Data:
+

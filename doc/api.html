@@ -37,23 +37,48 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <h4 id="returns">Returns</h4>
 <p>This documentation</p>
+<h3 id="get-all-slugs">Get all slugs</h3>
+<h4 id="returns-1">Returns</h4>
+<ul>
+<li>URI: http://example.org/rest/slug</li>
+<li>Methode: GET</li>
+<li>Auth: BASIC</li>
+</ul>
+<p>HTTP Status: 200 OK</p>
+<p>Content-Type: application/JSON</p>
+<p>Data:</p>
+<pre class="sourceCode JSON"><code class="sourceCode json">{
+    <span class="dt">&quot;slugs&quot;</span>:{
+        <span class="dt">&quot;wrint&quot;</span>:{
+            <span class="dt">&quot;subscriptions&quot;</span>:<span class="dv">1337</span>,
+            <span class="dt">&quot;title&quot;</span>:<span class="st">&quot;Wrint&quot;</span>
+        },
+        <span class="dt">&quot;cre&quot;</span>:{
+            <span class="dt">&quot;subscriptions&quot;</span>:<span class="dv">23</span>,
+            <span class="dt">&quot;title&quot;</span>:<span class="st">&quot;CRE&quot;</span>
+        }
+        <span class="er">...</span>
+    }
+}</code></pre>
+<p>or, if there is no entry</p>
+<p>HTTP Status: 204 No Content</p>
+<p>Content-Type: text/html</p>
+<p>Data: -</p>
 <h3 id="get-all-subscribers-with-full-information">Get all subscribers with full information</h3>
 <ul>
 <li>URI: http://example.org/rest/subscriber</li>
 <li>Methode: GET</li>
 <li>Auth: BASIC</li>
 </ul>
-<h4 id="returns-1">Returns</h4>
+<h4 id="returns-2">Returns</h4>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/JSON</p>
 <p>Data:</p>
 <pre class="sourceCode JSON"><code class="sourceCode json">{
     <span class="dt">&quot;anon@example.org&quot;</span>:{
-        <span class="dt">&quot;pad&quot;</span>:<span class="st">&quot;&quot;</span>,
         <span class="dt">&quot;info&quot;</span>:<span class="dv">1</span>
     },
     <span class="dt">&quot;anon2@example.org&quot;</span>:{
-        <span class="dt">&quot;pad&quot;</span>:<span class="st">&quot;anon&quot;</span>,
         <span class="dt">&quot;info&quot;</span>:<span class="dv">0</span>
     }
 }</code></pre>
@@ -67,13 +92,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Methode: GET</li>
 <li>Auth: BASIC</li>
 </ul>
-<h4 id="returns-2">Returns</h4>
+<h4 id="returns-3">Returns</h4>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/JSON</p>
 <p>Data:</p>
 <pre class="sourceCode JSON"><code class="sourceCode json">{
     <span class="dt">&quot;anon@example.org&quot;</span>:{
-        <span class="dt">&quot;pad&quot;</span>:<span class="st">&quot;&quot;</span>,
         <span class="dt">&quot;info&quot;</span>:<span class="dv">1</span>
     }
 }</code></pre>
@@ -87,7 +111,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Methode: GET</li>
 <li>Auth: BASIC</li>
 </ul>
-<h4 id="returns-3">Returns</h4>
+<h4 id="returns-4">Returns</h4>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/JSON</p>
 <p>Data:</p>
@@ -117,7 +141,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Methode: GET</li>
 <li>Auth: BASIC</li>
 </ul>
-<h4 id="returns-4">Returns</h4>
+<h4 id="returns-5">Returns</h4>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/JSON</p>
 <p>Data:</p>
@@ -140,7 +164,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Methode: GET</li>
 <li>Auth: BASIC</li>
 </ul>
-<h4 id="returns-5">Returns</h4>
+<h4 id="returns-6">Returns</h4>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/JSON</p>
 <p>Data:</p>
@@ -161,7 +185,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>Content-Type: text/html</p>
 <p>Data: -</p>
 <h3 id="get-all-subscribed-jids-from-a-specifc-slug">Get all subscribed jids from a specifc slug</h3>
-<h4 id="returns-6">Returns</h4>
+<h4 id="returns-7">Returns</h4>
 <ul>
 <li>URI: http://example.org/rest/subscription/slug/{slug}</li>
 <li>Methode: GET</li>
@@ -180,36 +204,44 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>HTTP Status: 204 No Content</p>
 <p>Content-Type: text/html</p>
 <p>Data: -</p>
-<h1 id="todo">TODO</h1>
-<h3 id="put-register---challenge">PUT register - challenge</h3>
-<h3 id="put-token">PUT token</h3>
-<h3 id="get-all-slugs">Get all slugs</h3>
-<h4 id="returns-7">Returns</h4>
+<h2 id="put-resources">PUT Resources</h2>
+<h3 id="register-a-new-user-to-the-service-by-putting-a-jid-and-a-challenge">Register a new user to the service by putting a jid and a challenge</h3>
 <ul>
-<li>URI: http://example.org/rest/slug</li>
-<li>Methode: GET</li>
+<li>URI: http://example.org/rest/register</li>
+<li>Methode: PUT</li>
 <li>Auth: BASIC</li>
+<li>Content-Type: application/json</li>
 </ul>
-<p>HTTP Status: 200 OK</p>
-<p>Content-Type: application/JSON</p>
 <p>Data:</p>
 <pre class="sourceCode JSON"><code class="sourceCode json">{
-    <span class="dt">&quot;slugs&quot;</span>:{
-        <span class="dt">&quot;wrint&quot;</span>:{
-            <span class="dt">&quot;subscriptions&quot;</span>:<span class="dv">1337</span>,
-            <span class="dt">&quot;title&quot;</span>:<span class="st">&quot;Wrint&quot;</span>
-        },
-        <span class="dt">&quot;cre&quot;</span>:{
-            <span class="dt">&quot;subscriptions&quot;</span>:<span class="dv">23</span>,
-            <span class="dt">&quot;title&quot;</span>:<span class="st">&quot;CRE&quot;</span>
-        }
-        <span class="er">...</span>
-    }
+    <span class="dt">&quot;jid&quot;</span>:<span class="st">&quot;anon@example.org&quot;</span>,
+    <span class="dt">&quot;challenge&quot;</span>:<span class="st">&quot;12345example&quot;</span>
 }</code></pre>
-<p>or, if there is no entry</p>
-<p>HTTP Status: 204 No Content</p>
+<h3 id="returns-8">Returns</h3>
+<p>HTTP Status: 200 OK</p>
 <p>Content-Type: text/html</p>
-<p>Data: -</p>
+<p>or, if user is registered to service</p>
+<p>HTTP Status: 409 Conflict</p>
+<p>Content-Type: text/html</p>
+<h3 id="verfiy-token-to-complete-the-registration">Verfiy token to complete the registration</h3>
+<ul>
+<li>URI: http://example.org/rest/token</li>
+<li>Methode: PUT</li>
+<li>Auth: BASIC</li>
+<li>Content-Type: application/json</li>
+</ul>
+<p>Data:</p>
+<pre class="sourceCode JSON"><code class="sourceCode json">{
+    <span class="dt">&quot;jid&quot;</span>:<span class="st">&quot;anon@example.org&quot;</span>,
+    <span class="dt">&quot;token&quot;</span>:<span class="st">&quot;user_entered_token&quot;</span>,
+    <span class="dt">&quot;challenge&quot;</span>:<span class="st">&quot;12345example&quot;</span>
+}</code></pre>
+<h3 id="returns-9">Returns</h3>
+<p>HTTP Status: 200 OK</p>
+<p>Content-Type: text/html</p>
+<p>or, if token is wrong</p>
+<p>HTTP Status: 409 Conflict</p>
+<p>Content-Type: text/html</p>
 <h2 id="post-resources">POST Resources</h2>
 <h3 id="subscribe-or-unsubscribe-a-user-to-one-ore-more-slugs-by-jid">Subscribe or unsubscribe a user to one ore more slugs by jid</h3>
 <ul>
@@ -225,7 +257,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="st">&quot;nsfw&quot;</span>
     ]
 }</code></pre>
-<h3 id="returns-8">Returns</h3>
+<h3 id="returns-10">Returns</h3>
 <p>HTTP Status: 200 OK</p>
 <p>Content-Type: application/json</p>
 <p>Data:</p>
@@ -244,5 +276,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="st">&quot;nsfw&quot;</span>
     ]
 }</code></pre>
+<p>or, if user is not registered</p>
+<p>HTTP Status: 409 Conflict</p>
+<p>Content-Type: text/html</p>
+<p>Data:</p>
 </body>
 </html>
